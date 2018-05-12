@@ -1,0 +1,9 @@
+[package]
+name = "light-cli"
+version = "0.1.0"
+authors = ["Rudi Horn <dyn-git@rudi-horn.de>"]
+
+[dependencies]
+nb = "0.1.1"
+embedded-hal = "0.1.2"
+heapless = "0.3.6"
