@@ -67,7 +67,7 @@ pub struct LightCli<SLEN> where SLEN: heapless::ArrayLength<u8> {
 }
 
 impl<SLEN : heapless::ArrayLength<u8>> LightCli<SLEN> {
-    /// Create a new LightCLI module.
+    /// Create a new LightCLI instance.
     pub fn new() -> Self {
         LightCli {
             tokenizer: Tokenizer::new(),

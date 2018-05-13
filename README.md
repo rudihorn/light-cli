@@ -2,7 +2,7 @@
 
 A lightweight and heapless command line interface / command passing tool. Probably more useful for machine to machine communication.
 
-## [Documentation](https://rudihorn.github.io/light-cli/light-cli/index.html)
+## [Documentation](https://rudihorn.github.io/light-cli/light_cli/)
 
 ## [Examples](https://github.com/rudihorn/light-cli/tree/master/examples/)
 
