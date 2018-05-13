@@ -11,7 +11,7 @@ matrix:
           sources:
             - debian-sid
           packages:
-            - arm-none-eabi-gcc
+            - gcc-arm-none-eabi
 
 before_install: set -e
 
