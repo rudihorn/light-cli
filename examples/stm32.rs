@@ -1,4 +1,3 @@
-
 #![no_std]
 
 extern crate cortex_m;
@@ -38,7 +37,7 @@ fn main() {
         &mut rcc.apb1,
     );
 
-    let (mut tx, mut rx) = serial.split();
+    let (mut _tx, mut rx) = serial.split();
 
     let mut name : String<U32> = String::new();
     let mut cli : LightCli<U32> = LightCli::new();
@@ -46,7 +45,7 @@ fn main() {
     loop {
         cli.fill(&mut rx).unwrap();
 
-        let _ = lightcli!(cli, cmd, key, val, [
+        lightcli!(cli, cmd, key, val, [
             "HELLO" => [
                 "Name" => name = String::from(val)
             ] => {};

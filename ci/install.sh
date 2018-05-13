@@ -1,8 +1,8 @@
 set -euxo pipefail
 
 main() {
-    if [ "$TARGET" = "thumbv7m-none-eabi" ]; then
-	    rustup install target thumbv7m-none-eabi
+    if [ "$TARGET" != "x86_64-unknown-linux-gnu" ]; then
+	    rustup target add "$TARGET"
     fi
 
     return

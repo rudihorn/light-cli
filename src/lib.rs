@@ -1,8 +1,9 @@
+
 #![no_std]
 
-pub extern crate heapless;
 pub extern crate embedded_hal as hal;
 pub extern crate nb;
+pub extern crate heapless;
 
 #[macro_use]
 mod macros;

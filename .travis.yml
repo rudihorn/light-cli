@@ -6,6 +6,12 @@ matrix:
       rust: nightly
     - env: TARGET=thumbv7m-none-eabi
       rust: nightly
+      addons:
+        apt:
+          sources:
+            - debian-sid
+          packages:
+            - binutils-arm-none-eabi
 
 before_install: set -e
 

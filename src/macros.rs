@@ -7,7 +7,7 @@ macro_rules! lightcli {
             ] => $done:expr
         );*
     ], $nomatch1:expr, $nomatch2:expr, $nomatch3:expr) => {
-        $cli.parse_data(|cbcmd| {
+        let _ = $cli.parse_data(|cbcmd| {
             match cbcmd {
                 $crate::CallbackCommand::Attribute($cmd, $key, $val) => {
                     match $cmd {
@@ -33,6 +33,6 @@ macro_rules! lightcli {
                     }
                 }
             }
-        })
+        });
     };
 }
