@@ -7,7 +7,9 @@
 //! 
 //! # Usage 
 //! 
-//! First define an instance of the CLI by initializing a `LightCLI` as follows:
+//! First define an instance of the CLI by initializing a [`LightCli`] as follows:
+//! 
+//! [`LightCli`]: struct.LightCli.html
 //! 
 //! ```
 //! let mut cli : LightCli<U32> = LightCli::new();
@@ -21,7 +23,9 @@
 //! cli.fill(&mut rx).unwrap();
 //! ```
 //! 
-//! Periodically parse the data in the buffer using the `lightcli!` macro:
+//! Periodically parse the data in the buffer using the [`lightcli!`] macro:
+//! 
+//! [`lightcli!`]: macro.lightcli.html
 //! 
 //! ```
 //! lightcli!(cli, cmd, key, val, [
