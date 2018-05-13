@@ -46,13 +46,13 @@ fn main() {
         cli.fill(&mut rx).unwrap();
 
         lightcli!(cli, cmd, key, val, [
-            "HELLO" => [
-                "Name" => name = String::from(val)
-            ] => {};
-            "EHLO" => [
-            ] => {}
-        ],
-        {}, {}, {}
-    );
+                "HELLO" => [
+                    "Name" => name = String::from(val)
+                ] => {};
+                "EHLO" => [
+                ] => {}
+            ],
+            {}, {}, {}
+        );
     }
 }

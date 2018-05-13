@@ -1,3 +1,45 @@
+//! Simple heapless command line interface parser for embedded devices
+//! 
+//! This crates makes use of a serial interface that implements the read trait
+//! of the [`embedded-hal`] crate.
+//! 
+//! [`embedded-hal`]: https://crates.io/crates/embedded-hal
+//! 
+//! # Usage 
+//! 
+//! First define an instance of the CLI by initializing a `LightCLI` as follows:
+//! 
+//! ```
+//! let mut cli : LightCli<U32> = LightCli::new();
+//! ```
+//! 
+//! Periodically copy all contents of the serial device into the cli buffer by using 
+//! the `fill` method, passing it the serial read instance `rx`, which implements
+//! the embedded-hal Read<u8> interface:
+//! 
+//! ```
+//! cli.fill(&mut rx).unwrap();
+//! ```
+//! 
+//! Periodically parse the data in the buffer using the `lightcli!` macro:
+//! 
+//! ```
+//! lightcli!(cli, cmd, key, val, [
+//!        "HELLO" => [
+//!             "Name" => name = String::from(val)
+//!         ] => {};
+//!         "EHLO" => [
+//!             ] => {}
+//!         ],
+//!         {}, {}, {}
+//!     );
+//! ```
+//! 
+//! # Examples
+//! 
+//! See the [examples] module.
+//! 
+//! [examples]: examples/index.html
 
 #![no_std]
 
