@@ -4,16 +4,19 @@ pub extern crate heapless;
 pub extern crate embedded_hal as hal;
 pub extern crate nb;
 
-#[cfg(test)]
-mod tests;
-
+#[macro_use]
+mod macros;
 mod tokenizer;
 mod lexer;
+
+#[cfg(test)]
+mod tests;
 
 use tokenizer::{Tokenizer};
 use lexer::Lexer;
 use hal::serial::Read;
-
+pub use lexer::CallbackCommand;
+pub use heapless::consts::*;
 
 pub enum StringType {
     Command,
@@ -35,7 +38,7 @@ impl<SLEN : heapless::ArrayLength<u8>> LightCli<SLEN> {
     }
 
     pub fn parse_data<CB>(&mut self, callback: CB) -> nb::Result<(), tokenizer::Error> 
-        where CB: FnMut(&str, &str, &str) -> () {
+        where CB: FnMut(CallbackCommand) -> () {
         self.lexer.parse_data(&mut self.tokenizer, callback)
     }
 

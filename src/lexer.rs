@@ -11,6 +11,11 @@ enum MachineState {
     Value,
 }
 
+pub enum CallbackCommand<'a> {
+    Attribute(&'a str, &'a str, &'a str),
+    Command(&'a str),
+}
+
 pub struct Lexer<SLEN> where SLEN: ArrayLength<u8> {
     current_cmd: String<SLEN>,
     current_key: String<SLEN>,
@@ -27,10 +32,13 @@ impl<SLEN> Lexer<SLEN> where SLEN: ArrayLength<u8> {
     }
 
     pub fn parse_data<CB>(&mut self, tokenizer: &mut Tokenizer<SLEN>, mut callback: CB) -> nb::Result<(), tokenizer::Error> 
-        where CB: FnMut(&str, &str, &str) -> () {
+        where CB: FnMut(CallbackCommand) -> () {
         tokenizer.get_tokens(|token| {
             let new_state = match token {
-                Token::NewLine => MachineState::NewCommand,
+                Token::NewLine => {
+                    callback(CallbackCommand::Command(self.current_cmd.as_str()));
+                    MachineState::NewCommand
+                },
                 Token::CarriageReturn => self.state.clone(), // ignore carriage returns
                 Token::Value(s) => {
                     match self.state {
@@ -43,7 +51,7 @@ impl<SLEN> Lexer<SLEN> where SLEN: ArrayLength<u8> {
                             MachineState::Value
                         },
                         MachineState::Value => {
-                            callback(self.current_cmd.as_str(), self.current_key.as_str(), s);
+                            callback(CallbackCommand::Attribute(self.current_cmd.as_str(), self.current_key.as_str(), s));
                             MachineState::Key
                         },
                     }
@@ -51,7 +59,7 @@ impl<SLEN> Lexer<SLEN> where SLEN: ArrayLength<u8> {
                 Token::Space => {
                     match self.state {
                         MachineState::Value => {
-                            callback(self.current_cmd.as_str(), self.current_key.as_str(), "");
+                            callback(CallbackCommand::Attribute(self.current_cmd.as_str(), self.current_key.as_str(), ""));
                             MachineState::Key
                         },
                         MachineState::NewCommand => self.state.clone(),
