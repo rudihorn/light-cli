@@ -28,12 +28,14 @@
 //! [`lightcli!`]: macro.lightcli.html
 //! 
 //! ```
+//! let mut name : String<U32> = String;:new();
+//! 
 //! lightcli!(cli, cmd, key, val, [
 //!        "HELLO" => [
 //!             "Name" => name = String::from(val)
 //!         ] => {};
 //!         "EHLO" => [
-//!             ] => {}
+//!             ] => { writeln!(tx, "name: {}", name); }
 //!         ],
 //!         {}, {}, {}
 //!     );

@@ -1,3 +1,5 @@
+
+/// A macro wrapping the LightCli parse function. 
 #[macro_export]
 macro_rules! lightcli {
     ($cli:expr, $cmd:ident, $key:ident, $val:ident, [ 

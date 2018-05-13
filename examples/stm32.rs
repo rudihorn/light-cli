@@ -50,7 +50,7 @@ fn main() {
                     "Name" => name = String::from(val)
                 ] => {};
                 "EHLO" => [
-                ] => {}
+                ] => { /* writeln!(tx, "EHLO Name={}", name); */ }
             ],
             {}, {}, {}
         );
