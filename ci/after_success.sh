@@ -1,7 +1,11 @@
 set -euxo pipefail
 
 main() {
-    cargo doc --target $TARGET
+    if [ $TARGET = x86_64-unknown-linux-gnu ]; then
+        return
+    fi
+
+    cargo doc --features doc --target $TARGET
 
     mkdir ghp-import
 
