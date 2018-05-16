@@ -23,7 +23,7 @@ macro_rules! lightcli {
                             }
                         }
                         )*
-                        _ => $nomatch3,
+                        _ => $nomatch1,
                     }
                 },
                 $crate::CallbackCommand::Command($cmd) => {

@@ -5,7 +5,7 @@ use heapless::RingBuffer;
 use heapless::String;
 use nb;
 
-use LightCli;
+use LightCliInput;
 use CallbackCommand;
 
 pub struct SerialBufferDevice {
@@ -52,9 +52,42 @@ pub fn test1() {
     let mut sb = SerialBufferDevice {
         rb: RingBuffer::new()
     };
-    let mut cli : LightCli<U32> = LightCli::new();
+    let mut cli : LightCliInput<U32> = LightCliInput::new();
 
     sb.write_str("HELLO TE❤ST=50\n");
+    cli.fill(&mut sb).unwrap();
+
+    let mut ran = false;
+    let mut done = false;
+
+    let _ = cli.parse_data(|cbcmd| {
+        match cbcmd {
+            CallbackCommand::Attribute(cmd, key, val) => {
+                assert!(cmd == "HELLO", "cmd={}", cmd);
+                assert!(key == "TE❤ST", "key={}", key);
+                assert!(val == "50", "val={}", val);
+                ran = true;
+            },
+            CallbackCommand::Command(cmd) => {
+                assert!(cmd == "HELLO", "cmd={}", cmd);
+                assert!(!done);
+                done = true;
+            }
+        }
+    });
+    
+    assert!(ran);
+    assert!(done);
+}
+
+#[test]
+pub fn test_win() {
+    let mut sb = SerialBufferDevice {
+        rb: RingBuffer::new()
+    };
+    let mut cli : LightCliInput<U32> = LightCliInput::new();
+
+    sb.write_str("HELLO TE❤ST=50\r\n");
     cli.fill(&mut sb).unwrap();
 
     let mut ran = false;
@@ -86,7 +119,7 @@ pub fn test_partial() {
     let mut sb = SerialBufferDevice {
         rb: RingBuffer::new()
     };
-    let mut cli : LightCli<U32> = LightCli::new();
+    let mut cli : LightCliInput<U32> = LightCliInput::new();
 
     // fill the buffer with some data
     sb.write_str("HELLO TE❤ST=50 Five=A");
@@ -143,7 +176,7 @@ pub fn test_macro() {
     let mut sb = SerialBufferDevice {
         rb: RingBuffer::new()
     };
-    let mut cli : LightCli<U32> = LightCli::new();
+    let mut cli : LightCliInput<U32> = LightCliInput::new();
 
     sb.write_str("HELLO Name=Foo\n");
     cli.fill(&mut sb).unwrap();

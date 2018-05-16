@@ -75,15 +75,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cortex-m-rt"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "cc 1.0.15 (registry+https://github.com/rust-lang/crates.io-index)",
- "r0 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "embedded-hal"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -121,7 +112,6 @@ name = "light-cli"
 version = "0.1.0"
 dependencies = [
  "cortex-m 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "cortex-m-rt 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "embedded-hal 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "heapless 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "nb 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -202,7 +192,6 @@ dependencies = [
 "checksum cortex-m 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)" = "2864dd1e83344abe7a6192befbeb8cd88bf763cfc560e28680d5b06a8ce9b7f7"
 "checksum cortex-m 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f5dac41bc35886139e9d31719c1ca1058322d0c7c54f41a26221d9716f9a2407"
 "checksum cortex-m-rt 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5e6d8cc476060aa9c17d3b2ed883652b1ab691e19410847322ef095532b4dbea"
-"checksum cortex-m-rt 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2360b9defe9ae166f60a3d38953f546b6259399bab73ab06262eb15dafe6471b"
 "checksum embedded-hal 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "684b1fa3196f78342296d04edc2a6e5d053729d1b64a819dcb072810d706e267"
 "checksum generic-array 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)" = "1591bdacf1a77bdef8af03f638ae9f05e9a7ee7e7de351104c2a014da364a82c"
 "checksum hash32 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "12d790435639c06a7b798af9e1e331ae245b7ef915b92f70a39b4cf8c00686af"

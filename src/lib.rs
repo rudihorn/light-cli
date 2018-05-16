@@ -57,6 +57,7 @@ pub extern crate heapless;
 mod macros;
 mod tokenizer;
 mod lexer;
+mod output;
 
 #[cfg(test)]
 mod tests;
@@ -65,17 +66,18 @@ use tokenizer::{Tokenizer};
 use lexer::Lexer;
 use hal::serial::Read;
 pub use lexer::CallbackCommand;
-pub use heapless::consts::*;
 
-pub struct LightCli<SLEN> where SLEN: heapless::ArrayLength<u8> {
+pub use output::LightCliOutput;
+
+pub struct LightCliInput<SLEN> where SLEN: heapless::ArrayLength<u8> {
     tokenizer: Tokenizer<SLEN>,
     lexer: Lexer<SLEN>
 }
 
-impl<SLEN : heapless::ArrayLength<u8>> LightCli<SLEN> {
+impl<SLEN : heapless::ArrayLength<u8>> LightCliInput<SLEN> {
     /// Create a new LightCLI instance.
     pub fn new() -> Self {
-        LightCli {
+        Self {
             tokenizer: Tokenizer::new(),
             lexer: Lexer::new(),
         }

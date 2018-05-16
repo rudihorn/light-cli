@@ -5,8 +5,10 @@ use tokenizer;
 use tokenizer::{Token, Tokenizer};
 
 #[derive(Clone)]
+#[derive(PartialEq)]
 enum MachineState {
     NewCommand,
+    NewCommandCR,
     Key,
     Value,
 }
@@ -36,12 +38,25 @@ impl<SLEN> Lexer<SLEN> where SLEN: ArrayLength<u8> {
         tokenizer.get_tokens(|token| {
             let new_state = match token {
                 Token::NewLine => {
-                    callback(CallbackCommand::Command(self.current_cmd.as_str()));
+                    if self.state != MachineState::NewCommandCR {
+                        callback(CallbackCommand::Command(self.current_cmd.as_str()));
+                        self.current_cmd.clear();
+                        self.current_key.clear();
+                    }
                     MachineState::NewCommand
                 },
-                Token::CarriageReturn => self.state.clone(), // ignore carriage returns
+                Token::CarriageReturn => {
+                    callback(CallbackCommand::Command(self.current_cmd.as_str()));
+                    self.current_cmd.clear();
+                    self.current_key.clear();
+                    MachineState::NewCommandCR
+                }, // ignore carriage returns
                 Token::Value(s) => {
                     match self.state {
+                        MachineState::NewCommandCR => {
+                            self.current_cmd = String::from(s);
+                            MachineState::Key
+                        },
                         MachineState::NewCommand => {
                             self.current_cmd = String::from(s);
                             MachineState::Key
@@ -63,6 +78,7 @@ impl<SLEN> Lexer<SLEN> where SLEN: ArrayLength<u8> {
                             MachineState::Key
                         },
                         MachineState::NewCommand => self.state.clone(),
+                        MachineState::NewCommandCR => self.state.clone(),
                         MachineState::Key => self.state.clone()
                     }
                 },

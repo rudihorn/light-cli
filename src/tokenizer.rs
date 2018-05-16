@@ -101,7 +101,6 @@ where SLEN: heapless::ArrayLength<u8> {
                 if !s.is_empty() {
                     callback(Token::Value(s))
                 }
-
                 s.clear();
             };
 

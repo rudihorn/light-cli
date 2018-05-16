@@ -9,50 +9,64 @@ extern crate heapless;
 #[macro_use]
 extern crate light_cli;
 
+use core::fmt::Write;   
 use dev_hal::serial::Serial;
 use dev_hal::prelude::*;
-use light_cli::LightCli;
+use light_cli::{LightCliInput, LightCliOutput};
 use heapless::consts::*;
 use heapless::String;
 
+
 fn main() {
     let dp = dev_hal::stm32f103xx::Peripherals::take().unwrap();
+
     let mut flash = dp.FLASH.constrain();
     let mut rcc = dp.RCC.constrain();
-    let mut afio = dp.AFIO.constrain(&mut rcc.apb2);
+
     let clocks = rcc.cfgr.freeze(&mut flash.acr);
+
+    let mut afio = dp.AFIO.constrain(&mut rcc.apb2);
 
     let mut gpiob = dp.GPIOB.split(&mut rcc.apb2);
 
-    // USART3
-    let tx = gpiob.pb10.into_alternate_push_pull(&mut gpiob.crh);
-    let rx = gpiob.pb11;
+    // USART1
+    let tx = gpiob.pb6.into_alternate_push_pull(&mut gpiob.crl);
+    let rx = gpiob.pb7;
 
-    let serial = Serial::usart3(
-        dp.USART3,
+    let serial = Serial::usart1(
+        dp.USART1,
         (tx, rx),
         &mut afio.mapr,
         9_600.bps(),
         clocks,
-        &mut rcc.apb1,
+        &mut rcc.apb2,
     );
 
-    let (mut _tx, mut rx) = serial.split();
+    let (mut tx, mut rx) = serial.split();
 
     let mut name : String<U32> = String::new();
-    let mut cli : LightCli<U32> = LightCli::new();
+
+    let mut cl_in : LightCliInput<U32> = LightCliInput::new();
+    let mut cl_out = LightCliOutput::new(&mut tx);
+
+    writeln!(cl_out, "Commands:").unwrap();
+    writeln!(cl_out, "   - HELLO Name=<Name>: Set the name").unwrap();
+    writeln!(cl_out, "   - EHLO: Print the name").unwrap();
 
     loop {
-        cli.fill(&mut rx).unwrap();
+        let _ = cl_out.flush();
+        let _ = cl_in.fill(&mut rx);
 
-        lightcli!(cli, cmd, key, val, [
+        lightcli!(cl_in, cmd, key, val, [
                 "HELLO" => [
                     "Name" => name = String::from(val)
-                ] => {};
+                ] => { writeln!(cl_out, "Name set").unwrap(); };
                 "EHLO" => [
-                ] => { /* writeln!(tx, "EHLO Name={}", name); */ }
+                ] => { writeln!(cl_out, "EHLO Name={}", name.as_str()).unwrap(); }
             ],
-            {}, {}, {}
+            {},
+            {writeln!(cl_out, "Unknown key for command {}: {}", cmd, key).unwrap()}, 
+            {writeln!(cl_out, "Unknown command: {}", cmd).unwrap()}
         );
     }
 }
