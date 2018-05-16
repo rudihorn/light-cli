@@ -186,7 +186,7 @@ pub fn test_macro() {
 
     let mut name : String<U32> = String::new();
 
-    lightcli!(cli, cmd, key, val, [
+    lightcli_adv!(cli, cmd, key, val, [
             "HELLO" => [
                 "Name" => {
                     ran = true;

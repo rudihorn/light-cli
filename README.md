@@ -18,7 +18,7 @@ There is an example for the STM32F103 microcontroller in stm32.rs.
 
 ## TODO
 
-- [ ] Writing to output
+- [X] Writing to output
 - [ ] Improve UTF-8 error detection / code.
 - [ ] Any form of autocompletion / backspaces etc.
 

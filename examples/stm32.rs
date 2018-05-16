@@ -1,3 +1,7 @@
+//! An example of how to use light-cli on an STM32F103 chip.
+//! 
+//! To run call `cargo run --example stm32 --target thumbv7m-none-eabi --release`.
+
 #![no_std]
 
 extern crate cortex_m;
@@ -57,16 +61,13 @@ fn main() {
         let _ = cl_out.flush();
         let _ = cl_in.fill(&mut rx);
 
-        lightcli!(cl_in, cmd, key, val, [
+        lightcli!(cl_in, cl_out, cmd, key, val, [
                 "HELLO" => [
                     "Name" => name = String::from(val)
                 ] => { writeln!(cl_out, "Name set").unwrap(); };
                 "EHLO" => [
                 ] => { writeln!(cl_out, "EHLO Name={}", name.as_str()).unwrap(); }
-            ],
-            {},
-            {writeln!(cl_out, "Unknown key for command {}: {}", cmd, key).unwrap()}, 
-            {writeln!(cl_out, "Unknown command: {}", cmd).unwrap()}
+            ]
         );
     }
 }

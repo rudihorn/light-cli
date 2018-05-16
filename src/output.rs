@@ -30,6 +30,12 @@ impl<'a, E> core::fmt::Write for LightCliOutput<'a, E> {
 }
 
 impl<'a, E> LightCliOutput<'a, E> {
+    /// Creates a now buffered console output instance. 
+    /// 
+    /// # Arguments
+    /// * `writer`: The serial output instance, implementing the [`Write<u8>`] interface.
+    /// 
+    /// [`Write<u8>`]: ../embedded_hal/serial/trait.Write.html
     pub fn new(writer: &'a mut Write<u8, Error = E>) -> Self {
         Self {
             rb: RingBuffer::new(),
@@ -52,6 +58,8 @@ impl<'a, E> LightCliOutput<'a, E> {
     /// If the function returns Ok, then the buffer has succesfully been flushed
     /// whereas the error `WouldBlock` indicates that it is not empty
     /// but would have blocked if it tried to submit the character.
+    /// 
+    /// To completely empty the buffer, use `block!(cl_output.flush()).unwrap()`.
     pub fn flush(&mut self) -> nb::Result<(), E> {
         let mut co = self.peek();
         

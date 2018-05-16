@@ -7,20 +7,31 @@
 //! 
 //! # Usage 
 //! 
-//! First define an instance of the CLI by initializing a [`LightCli`] as follows:
+//! First define an instance of the CLI by initializing a [`LightCliInput`] and a 
+//! [`LightCliOutput`]. The output instance requires the serial write instance 
+//! which should implement the embedded-hal [`Write<u8>`] trait:
 //! 
-//! [`LightCli`]: struct.LightCli.html
+//! [`LightCliInput`]: struct.LightCliInput.html
+//! [`LightCliOutput`]: struct.LightCliOutput.html
+//! [`Write<u8>`]: ../embedded_hal/serial/trait.Write.html
 //! 
 //! ```
-//! let mut cli : LightCli<U32> = LightCli::new();
+//! let mut cl_in : LightCliInput<U32> = LightCliInput::new();
+//! let mut cl_out = LightCliOutput::new(tx);
 //! ```
 //! 
 //! Periodically copy all contents of the serial device into the cli buffer by using 
-//! the `fill` method, passing it the serial read instance `rx`, which implements
-//! the embedded-hal Read<u8> interface:
+//! the [`fill`] method, passing it the serial read instance `rx`, which implements
+//! the embedded-hal [`Read<u8>`] trait. In addition it is necessary to try to empty
+//! the output buffer, by calling the [`flush`] method on the console output instance:
+//! 
+//! [`fill`]: struct.LightCliInput.html#method.fill
+//! [`flush`]: struct.LightCliOutput.html#method.flush
+//! [`Read<u8>`]: ../embedded_hal/serial/trait.Read.html
 //! 
 //! ```
-//! cli.fill(&mut rx).unwrap();
+//! let _ = cl_in.fill(&mut rx);
+//! let _ = cl_out.flush();
 //! ```
 //! 
 //! Periodically parse the data in the buffer using the [`lightcli!`] macro:
@@ -30,15 +41,28 @@
 //! ```
 //! let mut name : String<U32> = String;:new();
 //! 
-//! lightcli!(cli, cmd, key, val, [
-//!        "HELLO" => [
+//! loop {
+//!     /* fill, flush, etc. */
+//! 
+//!     lightcli!(cl_in, cl_out, cmd, key, val, [
+//!         "HELLO" => [
 //!             "Name" => name = String::from(val)
-//!         ] => {};
+//!         ] => { writeln!(cl_out, "Name set").unwrap(); };
 //!         "EHLO" => [
-//!             ] => { writeln!(tx, "name: {}", name); }
-//!         ],
-//!         {}, {}, {}
-//!     );
+//!         ] => { writeln!(cl_out, "EHLO Name={}", name.as_str()).unwrap(); }
+//!     ]);
+//! }
+//! ```
+//! 
+//! A serial communication may then look like:
+//! 
+//! ```
+//! >> EHLO
+//! << EHLO Name=
+//! >> HELLO Name=Johnson
+//! << Name set
+//! >> EHLO
+//! << EHLO Name=Johnson
 //! ```
 //! 
 //! # Examples
@@ -48,7 +72,6 @@
 //! [examples]: examples/index.html
 
 #![no_std]
-
 pub extern crate embedded_hal as hal;
 pub extern crate nb;
 pub extern crate heapless;
@@ -58,56 +81,13 @@ mod macros;
 mod tokenizer;
 mod lexer;
 mod output;
+mod input;
 
 #[cfg(test)]
 mod tests;
 
-use tokenizer::{Tokenizer};
-use lexer::Lexer;
-use hal::serial::Read;
 pub use lexer::CallbackCommand;
 
 pub use output::LightCliOutput;
+pub use input::LightCliInput;
 
-pub struct LightCliInput<SLEN> where SLEN: heapless::ArrayLength<u8> {
-    tokenizer: Tokenizer<SLEN>,
-    lexer: Lexer<SLEN>
-}
-
-impl<SLEN : heapless::ArrayLength<u8>> LightCliInput<SLEN> {
-    /// Create a new LightCLI instance.
-    pub fn new() -> Self {
-        Self {
-            tokenizer: Tokenizer::new(),
-            lexer: Lexer::new(),
-        }
-    }
-
-    /// Try to parse as much data from the internal ring buffer as possible.
-    /// 
-    /// # Arguments
-    /// * `callback` - This is the callback that will receive all parsing events.
-    /// 
-    /// # Remarks
-    /// All commands are in the form "COMMAND KEY=VALUE". For every parsed key/value 
-    /// pair the callback will be triggered with the current command string, current
-    /// key and the corresponding value. When a newline is read the callback is 
-    /// triggered with a command event.
-    pub fn parse_data<CB>(&mut self, callback: CB) -> nb::Result<(), tokenizer::Error> 
-        where CB: FnMut(CallbackCommand) -> () {
-        self.lexer.parse_data(&mut self.tokenizer, callback)
-    }
-
-    /// Copy as many available bytes from `ser` into the buffer as possible.
-    /// 
-    /// # Arguments
-    /// * `ser` - The serial interface to read from.
-    /// 
-    /// # Remarks
-    /// 
-    /// This will continue to try to read a byte from the serial device until the
-    /// device returns `nb::Error::WouldBlock`.
-    pub fn fill<E>(&mut self, ser: &mut Read<u8, Error=E>) -> nb::Result<(), E> {
-        self.tokenizer.fill(ser)
-    }
-}
