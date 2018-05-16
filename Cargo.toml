@@ -18,3 +18,6 @@ heapless = "0.3.6"
 cortex-m = "0.5.1"
 panic-abort = "0.1.1"
 stm32f103xx-hal = { git = "https://github.com/japaric/stm32f103xx-hal", features = ["rt"] }
+
+[features]
+doc = []
