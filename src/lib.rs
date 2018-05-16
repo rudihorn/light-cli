@@ -83,6 +83,9 @@ mod lexer;
 mod output;
 mod input;
 
+#[cfg(feature = "doc")]
+pub mod examples;
+
 #[cfg(test)]
 mod tests;
 
