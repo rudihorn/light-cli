@@ -4,14 +4,41 @@ A lightweight and heapless command line interface / command passing tool. Probab
 
 ## [Documentation](https://rudihorn.github.io/light-cli/light_cli/)
 
-## [Examples](https://github.com/rudihorn/light-cli/tree/master/examples/)
+## [Example]
 
-There is an example for the STM32F103 microcontroller in stm32.rs.
+The following definition allows for the commands:
+* `HELLO Name=<Name>`: Set the name to `<Name>`
+* `EHLO`: Return the name
+
+```
+lightcli!(cl_in, cl_out, cmd, key, val, [
+  "HELLO" => [
+    "Name" => name = String::from(val)
+  ] => { writeln!(cl_out, "Name set").unwrap(); };
+  "EHLO" => [
+  ] => { writeln!(cl_out, "EHLO Name={}", name.as_str()).unwrap(); }
+]);
+```
+
+A typical serial communication could look like:
+
+```
+>> EHLO
+<< EHLO Name=
+>> HELLO Name=Johnson
+<< Name set
+>> EHLO
+<< EHLO Name=Johnson
+```
+
+It is recommended to use this in conjunction with the program [`rlwrap`](https://linux.die.net/man/1/rlwrap).
+
+[Complete Example](https://github.com/rudihorn/light-cli/tree/master/examples/)
 
 ## What works
 
 - Read key value style commands in the form:
-  COMMAND KEY=VALUE
+  `COMMAND KEY=VALUE`
 - UTF-8 encoding.
 - Specify the heapless string length.
 - Partial command evaluation as data is received through the serial connection.

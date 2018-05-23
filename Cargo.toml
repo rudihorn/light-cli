@@ -7,6 +7,7 @@ categories = ["embedded", "no-std"]
 description = "simple heapless command line interface parser for embedded devices"
 repository = "https://github.com/rudihorn/light-cli"
 documentation = "https://rudihorn.github.io/light-cli/light_cli/index.html"
+readme = "README.md"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
