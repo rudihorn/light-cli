@@ -1,6 +1,17 @@
 //! An example of how to use light-cli on an STM32F103 chip.
 //! 
 //! To run call `cargo run --example stm32 --target thumbv7m-none-eabi --release`.
+//! 
+//! A typical command line communication for the example could look like:
+//! ```
+//! >> EHLO
+//! << EHLO Name=
+//! >> HELLO Name=Johnson
+//! << Name set
+//! >> EHLO
+//! << EHLO Name=Johnson
+//! ```
+//! 
 //!
 //! ```
 //! 
@@ -21,7 +32,6 @@
 //! use light_cli::{LightCliInput, LightCliOutput};
 //! use heapless::consts::*;
 //! use heapless::String;
-//! 
 //! 
 //! fn main() {
 //!     let dp = dev_hal::stm32f103xx::Peripherals::take().unwrap();

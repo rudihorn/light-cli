@@ -31,7 +31,6 @@ use light_cli::{LightCliInput, LightCliOutput};
 use heapless::consts::*;
 use heapless::String;
 
-
 fn main() {
     let dp = dev_hal::stm32f103xx::Peripherals::take().unwrap();
 
