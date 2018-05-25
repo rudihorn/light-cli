@@ -14,6 +14,7 @@ matrix:
 before_install: set -e
 
 install:
+  - cargo update
   - bash ci/install.sh
 
 script:
