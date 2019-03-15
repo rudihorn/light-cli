@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CallbackCommand",""]],"macro":[["lightcli","This macro allows for an easy way to define key value commands."],["lightcli_adv","This macro allows for an easy way to define key value commands while still allowing to define custom error handlers."]],"mod":[["examples","Examples"]],"struct":[["LightCliInput",""],["LightCliOutput",""]]});

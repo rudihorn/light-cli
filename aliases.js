@@ -1,0 +1,10 @@
+var ALIASES = {};
+ALIASES["byteorder"] = {};
+ALIASES["embedded_hal"] = {};
+ALIASES["generic_array"] = {};
+ALIASES["hash32"] = {};
+ALIASES["heapless"] = {};
+ALIASES["light_cli"] = {};
+ALIASES["nb"] = {};
+ALIASES["typenum"] = {};
+ALIASES["void"] = {};
