@@ -12,13 +12,14 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 nb = "0.1.1"
-embedded-hal = { version = "0.2.0", features = ["unproven"] }
-heapless = "0.3.6"
+embedded-hal = { version = "0.2.2", features = ["unproven"] }
+heapless = "0.4.2"
 
 [target."thumbv7m-none-eabi".dev-dependencies]
-cortex-m = "0.5.2"
-panic-abort = "0.1.1"
-stm32f103xx-hal = { git = "https://github.com/japaric/stm32f103xx-hal", features = ["rt"] }
+cortex-m = "0.5.8"
+cortex-m-rt = "0.6.7"
+  panic-abort = "0.3.1"
+stm32f1xx-hal = { version = "0.2.1", features = ["stm32f103"] }
 
 [features]
 doc = []

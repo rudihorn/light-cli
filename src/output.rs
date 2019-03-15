@@ -4,10 +4,10 @@ use nb;
 use hal::serial::Write;
 
 use heapless::consts::*;
-use heapless::RingBuffer;
+use heapless::spsc::Queue;
 
 pub struct LightCliOutput<'a, E: 'a> {
-    rb: RingBuffer<u8, U128>,
+    rb: Queue<u8, U128>,
     writer: &'a mut Write<u8, Error=E>
 }
 
@@ -38,7 +38,7 @@ impl<'a, E> LightCliOutput<'a, E> {
     /// [`Write<u8>`]: ../embedded_hal/serial/trait.Write.html
     pub fn new(writer: &'a mut Write<u8, Error = E>) -> Self {
         Self {
-            rb: RingBuffer::new(),
+            rb: Queue::new(),
             writer: writer
         }
     }

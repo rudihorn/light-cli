@@ -5,7 +5,7 @@ use heapless;
 
 use hal::serial::Read;
 use heapless::consts::*;
-use heapless::RingBuffer;
+use heapless::spsc::Queue;
 use heapless::String;
 
 #[derive(Debug)]
@@ -16,7 +16,7 @@ pub enum Error{
 }
 
 pub struct Tokenizer<SLEN> where SLEN: heapless::ArrayLength<u8> {
-    rb: RingBuffer<u8, U64>,
+    rb: Queue<u8, U64>,
     nextstr: String<SLEN>,
 }
 
@@ -32,7 +32,7 @@ impl<SLEN> Tokenizer<SLEN>
 where SLEN: heapless::ArrayLength<u8> {
     pub fn new() -> Self {
         Self {
-            rb: RingBuffer::new(),
+            rb: Queue::new(),
             nextstr: String::new(),
         }
     }

@@ -1,7 +1,7 @@
 //! An example of how to use light-cli on an STM32F103 chip.
-//! 
+//!
 //! To run call `cargo run --example stm32 --target thumbv7m-none-eabi --release`.
-//! 
+//!
 //! A typical command line communication for the example could look like:
 //! ```
 //! >> EHLO
@@ -11,28 +11,33 @@
 //! >> EHLO
 //! << EHLO Name=Johnson
 //! ```
-//! 
+//!
 
 #![no_std]
+#![no_main]
 
 extern crate cortex_m;
+extern crate cortex_m_rt;
 extern crate panic_abort;
 extern crate embedded_hal as hal;
-extern crate stm32f103xx_hal as dev_hal;
+extern crate stm32f1xx_hal as dev_hal;
 extern crate heapless;
 
 #[macro_use]
 extern crate light_cli;
 
-use core::fmt::Write;   
+use core::fmt::Write;
 use dev_hal::serial::Serial;
 use dev_hal::prelude::*;
 use light_cli::{LightCliInput, LightCliOutput};
 use heapless::consts::*;
 use heapless::String;
 
-fn main() {
-    let dp = dev_hal::stm32f103xx::Peripherals::take().unwrap();
+use cortex_m_rt::entry;
+
+#[entry]
+fn main() -> ! {
+    let dp = dev_hal::device::Peripherals::take().unwrap();
 
     let mut flash = dp.FLASH.constrain();
     let mut rcc = dp.RCC.constrain();
