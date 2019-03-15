@@ -12,7 +12,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 nb = "0.1.1"
-embedded-hal = { version = "0.2.2", features = ["unproven"] }
+embedded-hal = "0.2.2"
 heapless = "0.4.2"
 
 [target."thumbv7m-none-eabi".dev-dependencies]
